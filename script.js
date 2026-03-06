@@ -165,16 +165,61 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ── FORM ──────────────────────────────────────────────────
+  // ── FORM — Web3Forms ──────────────────────────────────────
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
-    contactForm.addEventListener('submit', e => {
+    contactForm.addEventListener('submit', async e => {
       e.preventDefault();
+
       const btn = contactForm.querySelector('button[type="submit"]');
       const orig = btn.innerHTML;
-      btn.innerHTML = '<i class="fa fa-check"></i> Message Sent!';
-      btn.style.background = '#2d8a4e';
-      setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; contactForm.reset(); }, 3000);
+
+      // Loading state
+      btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>&nbsp; Sending...';
+      btn.disabled = true;
+
+      const formData = new FormData(contactForm);
+      const data = Object.fromEntries(formData);
+
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Success state
+          btn.innerHTML = '<i class="fa fa-check"></i>&nbsp; Message Sent!';
+          btn.style.background = '#2d8a4e';
+          contactForm.reset();
+          setTimeout(() => {
+            btn.innerHTML = orig;
+            btn.style.background = '';
+            btn.disabled = false;
+          }, 4000);
+        } else {
+          // Error state
+          btn.innerHTML = '<i class="fa fa-times"></i>&nbsp; Failed. Try Again.';
+          btn.style.background = '#8a2d2d';
+          setTimeout(() => {
+            btn.innerHTML = orig;
+            btn.style.background = '';
+            btn.disabled = false;
+          }, 3000);
+        }
+
+      } catch (err) {
+        btn.innerHTML = '<i class="fa fa-times"></i>&nbsp; Error. Try Again.';
+        btn.style.background = '#8a2d2d';
+        setTimeout(() => {
+          btn.innerHTML = orig;
+          btn.style.background = '';
+          btn.disabled = false;
+        }, 3000);
+      }
     });
   }
 
