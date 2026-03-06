@@ -50,7 +50,7 @@ const SITE_CONFIG = {
 
   about: {
     headline:   "Passionate About Web Excellence",
-    bio:        "RK Web Development is a boutique web studio dedicated to crafting exceptional digital experiences. We combine technical expertise with creative design thinking to build websites that not only look stunning but perform at the highest level.",
+    bio:        "I craft exceptional digital experiences that elevate brands and drive real results. With a passion for clean code and compelling design, I build websites that look stunning and perform well.",
     yearsExp:   "1+",
     highlights: [
       { icon: "fa fa-lightbulb-o", text: "1+ Years of Experience" },
